@@ -39,6 +39,6 @@ class Order(models.Model):
         "users.User", related_name="my_sales", on_delete=models.CASCADE
     )
     status = models.CharField(
-        max_length=127, choiches=OrderStatus.choices, default=OrderStatus.DEFAULT
+        max_length=127, choices=OrderStatus.choices, default=OrderStatus.DEFAULT
     )
     product = models.ManyToManyField("products.Product", through="OrderProduct")
