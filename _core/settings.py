@@ -39,11 +39,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 MY_APPS = [
-    "users.User",
-    "carts.Cart",
-    "orders.Order",
-    "products.Product",
-    "addresses.Address",
+    "users",
+    "carts",
+    "orders",
+    "products",
+    "addresses",
 ]
 
 THIRD_PARTY_APPS = [
