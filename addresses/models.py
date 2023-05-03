@@ -7,7 +7,7 @@ class Address(models.Model):
     street = models.CharField(max_length=127)
     zip_code = models.CharField(max_length=9)
     number = models.CharField(max_length=10)
-    complement = models.CharField(max_length=127)
+    complement = models.CharField(max_length=127, null=True)
     is_main_address = models.BooleanField(default=False)
     user = models.ForeignKey(
         "users.User",

@@ -9,8 +9,8 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     birthdate = models.DateField(blank=True, null=True)
-    is_saler = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    is_saler = models.BooleanField(default=False, null=True)
+    is_admin = models.BooleanField(default=False, null=True)
 
     def __repr__(self) -> str:
         return f"<User [{self.id}] - {self.email}>"
