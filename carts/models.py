@@ -25,7 +25,7 @@ class Cart(models.Model):
         primary_key=True,
         editable=False,
     )
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         "users.user",
         on_delete=models.CASCADE,
         related_name="cart",

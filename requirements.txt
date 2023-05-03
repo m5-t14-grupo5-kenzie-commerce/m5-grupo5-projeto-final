@@ -9,6 +9,7 @@ Django==4.2
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 executing==1.2.0
+ipdb==0.13.13
 ipython==8.13.1
 jedi==0.18.2
 matplotlib-inline==0.1.6

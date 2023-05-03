@@ -8,10 +8,10 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict) -> User:
         if validated_data["is_admin"]:
             user = User.objects.create_superuser(**validated_data)
+        else:
+            user = User.objects.create_user(**validated_data)
 
-        user = User.objects.create_user(**validated_data)
-
-        # Cart.objects.create(user=user)
+        Cart.objects.create(user=user)
 
         return user
 
@@ -40,8 +40,9 @@ class UserSerializer(serializers.ModelSerializer):
             "is_saler",
             "is_admin",
             "is_superuser",
+            "cart",
         ]
-
+        read_only_fields = ["id", "cart"]
         extra_kwargs = {
             "password": {"write_only": True},
             "is_superuser": {"read_only": True},
