@@ -1,15 +1,17 @@
+from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from carts.models import CartProduct
 from products.models import Product
+from django.core.validators import MinValueValidator
 
 
-class CartSerializer:
+class CartProductSerializer:
     def create(self, validated_data: dict):
         product = get_object_or_404(Product, pk=validated_data["product_id"])
         amount = product["stock"]
-        # validar se o amount é maior que 0
+
         if validated_data["amount"] > amount:
-            return "mensagem de erro"
+            raise ValidationError("Quantity exceed the stock")
         CartProduct.objects.create(**validated_data)
 
     class Meta:
@@ -21,3 +23,4 @@ class CartSerializer:
         ]
         # depth = 1
         read_only_fields = ["id"]
+        extra_kwargs = {"amount": {"validators": [MinValueValidator(1)]}}
