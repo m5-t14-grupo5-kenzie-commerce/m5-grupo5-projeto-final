@@ -6,10 +6,13 @@ from rest_framework.validators import UniqueValidator
 
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict) -> User:
-        if validated_data["is_admin"]:
+        admin = validated_data.pop("is_admin", False)
+
+        if admin:
             user = User.objects.create_superuser(**validated_data)
 
-        user = User.objects.create_user(**validated_data)
+        else:
+            user = User.objects.create_user(**validated_data)
 
         # Cart.objects.create(user=user)
 
