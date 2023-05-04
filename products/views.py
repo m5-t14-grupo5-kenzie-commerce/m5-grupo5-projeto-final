@@ -2,10 +2,12 @@ from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
 from .permissions import IsSalerOrReadOnly
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class ProductView(generics.ListCreateAPIView):
     # Inserir JWTAuthentication
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsSalerOrReadOnly]
 
     queryset = Product.objects.all()

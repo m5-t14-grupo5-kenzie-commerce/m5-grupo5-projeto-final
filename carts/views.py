@@ -1,25 +1,27 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
-
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from carts.models import Cart, CartProduct
 from carts.serializers import CartProductSerializer
-from products.models import Product
+from rest_framework.views import status
 
 
-class CartView(generics.CreateAPIView):
+class CartView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
 
-    # Verificar se é CartProduct
     queryset = CartProduct.objects.all()
     serializer_class = CartProductSerializer
 
+    def list(self, request, *args, **kwargs):
+        Cart.objects.filter(id=request.user.cart.id)
+        return super().list(request, *args, **kwargs)
+
     def perform_create(self, serializer):
-        serializer.save()
+        serializer.save(cart=self.request.user.cart)
 
 
-class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
+class CartProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
 
     queryset = CartProduct.objects.all()
@@ -33,6 +35,7 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
             CartProduct, cart_id=cart_id, product_id=product_id
         )
         cart_product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *arg, **kwargs):
         cart_id = kwargs["cart_id"]

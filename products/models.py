@@ -2,8 +2,11 @@ from django.db import models
 
 
 class Product(models.Model):
+    # adicionar campo id com UUIDField
     saler = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="products"
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="products",
     )
     stock = models.IntegerField()
     name = models.CharField(max_length=127)

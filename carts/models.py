@@ -17,6 +17,7 @@ class CartProduct(models.Model):
         on_delete=models.CASCADE,
     )
     amount = models.IntegerField()
+    id_product = models.CharField(null=True)
 
 
 class Cart(models.Model):
