@@ -8,11 +8,12 @@ from django.core.validators import MinValueValidator
 
 class CartProductSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict):
-        product = get_object_or_404(Product, pk=validated_data["product"])
-        amount = product["stock"]
+        product = get_object_or_404(Product, pk=validated_data["id_product"])
+
+        amount = product.stock
 
         if validated_data["amount"] > amount:
-            raise ValidationError({"message": "Quantity exceeds the stock"})
+            raise ValidationError({"amount": ["Quantity exceeds the stock"]})
 
         # pega ou cria um item
         # dois primeiros parametros fazem a busca
@@ -35,10 +36,16 @@ class CartProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartProduct
         fields = [
-            "cart",
             "product",
             "amount",
+            "id_product",
         ]
-        # depth = 1
-        read_only_fields = ["id"]
-        extra_kwargs = {"amount": {"validators": [MinValueValidator(1)]}}
+        read_only_fields = [
+            "id",
+            "product",
+        ]
+        extra_kwargs = {
+            "amount": {"validators": [MinValueValidator(1)]},
+            "id_product": {"write_only": True},
+        }
+        depth = 1
