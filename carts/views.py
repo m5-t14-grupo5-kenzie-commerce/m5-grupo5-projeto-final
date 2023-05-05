@@ -1,3 +1,4 @@
+from rest_framework.serializers import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
@@ -29,23 +30,28 @@ class CartProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = ["product_id", "cart_id"]
 
     def destroy(self, request, *args, **kwargs):
-        cart_id = kwargs["cart_id"]
         product_id = kwargs["product_id"]
         cart_product = get_object_or_404(
-            CartProduct, cart_id=cart_id, product_id=product_id
+            CartProduct, cart_id=request.user.cart, product_id=product_id
         )
         cart_product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *arg, **kwargs):
-        cart_id = kwargs["cart_id"]
         product_id = kwargs["product_id"]
         cart_product = get_object_or_404(
-            CartProduct, cart_id=cart_id, product_id=product_id
+            CartProduct, cart_id=request.user.cart, product_id=product_id
         )
+        product = get_object_or_404(Product, pk=product_id)
+        amount = product.stock
+
         serializer = CartProductSerializer(
             instance=cart_product, data=request.data, partial=True
         )
         serializer.is_valid(raise_exception=True)
+
+        if serializer.validated_data["amount"] > amount:
+            raise ValidationError({"amount": ["Quantity exceeds the stock"]})
+
         serializer.save()
         return Response(serializer.data)

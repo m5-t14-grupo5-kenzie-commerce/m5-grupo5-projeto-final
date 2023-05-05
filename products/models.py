@@ -1,8 +1,9 @@
 from django.db import models
+import uuid
 
 
 class Product(models.Model):
-    # adicionar campo id com UUIDField
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     saler = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
@@ -12,6 +13,7 @@ class Product(models.Model):
     name = models.CharField(max_length=127)
     category = models.CharField(max_length=127)
     available = models.BooleanField()
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
 
 def __str__(self):
