@@ -1,3 +1,4 @@
+from rest_framework.serializers import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
@@ -5,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from carts.models import Cart, CartProduct
 from carts.serializers import CartProductSerializer
+from products.models import Product
+
 from products.models import Product
 
 
@@ -27,18 +30,16 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = ["product_id", "cart_id"]
 
     def destroy(self, request, *args, **kwargs):
-        cart_id = kwargs["cart_id"]
         product_id = kwargs["product_id"]
         cart_product = get_object_or_404(
-            CartProduct, cart_id=cart_id, product_id=product_id
+            CartProduct, cart_id=request.user.cart, product_id=product_id
         )
         cart_product.delete()
 
     def update(self, request, *arg, **kwargs):
-        cart_id = kwargs["cart_id"]
         product_id = kwargs["product_id"]
         cart_product = get_object_or_404(
-            CartProduct, cart_id=cart_id, product_id=product_id
+            CartProduct, cart_id=request.user.cart, product_id=product_id
         )
         serializer = CartProductSerializer(
             instance=cart_product, data=request.data, partial=True
