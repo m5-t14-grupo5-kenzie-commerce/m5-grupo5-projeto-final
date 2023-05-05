@@ -1,7 +1,7 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from .models import Product
 from .serializers import ProductSerializer
-from .permissions import IsSalerOrReadOnly
+from .permissions import IsProductOwner, IsSalerOrReadOnly
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
@@ -17,7 +17,8 @@ class ProductView(generics.ListCreateAPIView):
 
 
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsSalerOrReadOnly]
-    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsProductOwner]
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer

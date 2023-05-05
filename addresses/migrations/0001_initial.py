@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Product",
+            name="Address",
             fields=[
                 (
                     "id",
@@ -26,19 +26,16 @@ class Migration(migrations.Migration):
                         serialize=False,
                     ),
                 ),
-                ("stock", models.IntegerField()),
-                ("name", models.CharField(max_length=127)),
-                ("category", models.CharField(max_length=127)),
-                ("available", models.BooleanField()),
+                ("street", models.CharField(max_length=127)),
+                ("zip_code", models.CharField(max_length=9)),
+                ("number", models.CharField(max_length=10)),
+                ("complement", models.CharField(max_length=127, null=True)),
+                ("is_main_address", models.BooleanField(default=False)),
                 (
-                    "price",
-                    models.DecimalField(decimal_places=2, max_digits=10, null=True),
-                ),
-                (
-                    "saler",
+                    "user",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="products",
+                        related_name="addresses",
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
