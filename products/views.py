@@ -20,7 +20,6 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsProductOwner]
 
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
@@ -28,7 +27,9 @@ class ProductRetrieveNameView(generics.RetrieveAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsProductOwner]
 
-    queryset = Product.objects.all()
+    def get_queryset(self):
+        return Product.objects.filter(name__icontains=self.kwargs.get("name"))
+
     serializer_class = ProductSerializer
 
 
@@ -36,13 +37,7 @@ class ProductRetrieveCategoryView(generics.RetrieveAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsProductOwner]
 
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    def get_queryset(self):
+        return Product.objects.filter(category__iexact=self.kwargs.get("category"))
 
-
-class ProductRetrieveIdView(generics.RetrieveAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsProductOwner]
-
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
