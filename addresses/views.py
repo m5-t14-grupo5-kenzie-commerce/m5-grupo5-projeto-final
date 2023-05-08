@@ -17,5 +17,11 @@ class AddressView(generics.ListCreateAPIView):
         return Address.objects.filter(user=self.kwargs.get("pk"))
 
     def perform_create(self, serializer) -> None:
+        queryset = Address.objects.filter(is_main_address=True).first()
+        print(queryset)
+
+        if queryset:
+            queryset.is_main_address = False
+
         user = get_object_or_404(User, pk=self.kwargs.get("pk"))
         serializer.save(user=user)
