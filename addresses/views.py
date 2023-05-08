@@ -5,6 +5,7 @@ from users.models import User
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
+import ipdb
 
 
 class AddressView(generics.ListCreateAPIView):
@@ -17,11 +18,22 @@ class AddressView(generics.ListCreateAPIView):
         return Address.objects.filter(user=self.kwargs.get("pk"))
 
     def perform_create(self, serializer) -> None:
-        queryset = Address.objects.filter(is_main_address=True).first()
-        print(queryset)
+        user = get_object_or_404(User, pk=self.kwargs.get("pk"))
+        serializer.save(user=user)
 
-        if queryset:
-            queryset.is_main_address = False
 
+class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    serializer_class = AddressSerializer
+    queryset = Address.objects.all()
+
+    def get_object(self):
+        return Address.objects.get(
+            user=self.kwargs.get("pk"), id=self.kwargs.get("pk2")
+        )
+
+    def perform_update(self, serializer) -> None:
         user = get_object_or_404(User, pk=self.kwargs.get("pk"))
         serializer.save(user=user)
