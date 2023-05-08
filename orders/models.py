@@ -22,7 +22,7 @@ class OrderProduct(models.Model):
         "products.Product",
         on_delete=models.CASCADE,
     )
-    amount = models.IntegerField()
+    amount = models.IntegerField(null=True)
 
 
 class Order(models.Model):
@@ -33,12 +33,21 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     costumer = models.ForeignKey(
-        "users.User", related_name="my_orders", on_delete=models.CASCADE
+        "users.User",
+        related_name="my_orders",
+        on_delete=models.CASCADE,
     )
     saler = models.ForeignKey(
-        "users.User", related_name="my_sales", on_delete=models.CASCADE
+        "users.User",
+        related_name="my_sales",
+        on_delete=models.CASCADE,
     )
     status = models.CharField(
-        max_length=127, choices=OrderStatus.choices, default=OrderStatus.DEFAULT
+        max_length=127,
+        choices=OrderStatus.choices,
+        default=OrderStatus.DEFAULT,
     )
-    product = models.ManyToManyField("products.Product", through="OrderProduct")
+    product = models.ManyToManyField(
+        "products.Product",
+        through="OrderProduct",
+    )

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Cart",
+            name="Order",
             fields=[
                 (
                     "id",
@@ -27,10 +27,31 @@ class Migration(migrations.Migration):
                         serialize=False,
                     ),
                 ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Em andamento", "Em Andamento"),
+                            ("Entregue", "Entregue"),
+                            ("Pedido realizado", "Default"),
+                        ],
+                        default="Pedido realizado",
+                        max_length=127,
+                    ),
+                ),
+                (
+                    "costumer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="my_orders",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name="CartProduct",
+            name="OrderProduct",
             fields=[
                 (
                     "id",
@@ -42,11 +63,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("amount", models.IntegerField()),
-                ("id_product", models.CharField(null=True)),
                 (
-                    "cart",
+                    "order",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="carts.cart"
+                        on_delete=django.db.models.deletion.CASCADE, to="orders.order"
                     ),
                 ),
                 (
@@ -59,18 +79,18 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name="cart",
-            name="products",
+            model_name="order",
+            name="product",
             field=models.ManyToManyField(
-                through="carts.CartProduct", to="products.product"
+                through="orders.OrderProduct", to="products.product"
             ),
         ),
         migrations.AddField(
-            model_name="cart",
-            name="user",
-            field=models.OneToOneField(
+            model_name="order",
+            name="saler",
+            field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="cart",
+                related_name="my_sales",
                 to=settings.AUTH_USER_MODEL,
             ),
         ),

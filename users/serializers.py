@@ -10,10 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
             user = User.objects.create_superuser(**validated_data)
         else:
             user = User.objects.create_user(**validated_data)
-        else:
-            user = User.objects.create_user(**validated_data)
 
-        Cart.objects.create(user=user)
         Cart.objects.create(user=user)
 
         return user
