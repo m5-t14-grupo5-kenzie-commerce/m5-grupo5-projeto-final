@@ -54,3 +54,37 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer.save()
         return Response(serializer.data)
+
+
+class CartRetrieveNameView(generics.RetrieveAPIView):
+    authentication_classes = [JWTAuthentication]
+
+    queryset = CartProduct.objects.all()
+    serializer_class = CartProductSerializer
+    lookup_url_kwarg = ["product_id", "cart_id"]
+
+    def destroy(self, request, *args, **kwargs):
+        product_id = kwargs["product_id"]
+        cart_product = get_object_or_404(
+            CartProduct, cart_id=request.user.cart, product_id=product_id
+        )
+        cart_product.delete()
+
+    def update(self, request, *arg, **kwargs):
+        product_id = kwargs["product_id"]
+        cart_product = get_object_or_404(
+            CartProduct, cart_id=request.user.cart, product_id=product_id
+        )
+        product = get_object_or_404(Product, pk=product_id)
+        amount = product.stock
+
+        serializer = CartProductSerializer(
+            instance=cart_product, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        if serializer.validated_data["amount"] > amount:
+            raise ValidationError({"amount": ["Quantity exceeds the stock"]})
+
+        serializer.save()
+        return Response(serializer.data)

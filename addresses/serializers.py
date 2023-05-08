@@ -15,8 +15,7 @@ class AddressSerializer(serializers.ModelSerializer):
                 for item in user_true_address:
                     # ipdb.set_trace()
                     item.is_main_address = False
-
-            Address.objects.save(**user_true_address)
+                    item.save()
 
         return Address.objects.create(**validated_data)
 
