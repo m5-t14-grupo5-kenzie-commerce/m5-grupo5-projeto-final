@@ -1,13 +1,9 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import generics, permissions
 from .models import Product
 from .serializers import ProductSerializer
 from .permissions import IsProductOwner, IsSalerOrReadOnly
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
-
 
 class ProductView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -23,6 +19,7 @@ class ProductView(generics.ListCreateAPIView):
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsProductOwner]
+
 
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
@@ -42,7 +39,6 @@ class ProductRetrieveNameView(generics.RetrieveAPIView):
 
 
 class ProductRetrieveCategoryView(generics.RetrieveAPIView):
-    authentication_classes = [JWTAuthentication]
     lookup_url_kwarg = ["category"]
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
@@ -53,3 +49,6 @@ class ProductRetrieveCategoryView(generics.RetrieveAPIView):
         serializer = ProductSerializer(queryset, many=True)
 
         return Response(serializer.data)
+
+
+
