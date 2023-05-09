@@ -12,4 +12,4 @@ class IsSalerOrReadOnly(permissions.BasePermission):
 
 class IsProductOwner(permissions.BasePermission):
     def has_object_permission(self, request, view: View, obj: Product) -> bool:
-        return obj.saler_id == request.user
+        return obj.saler == request.user
