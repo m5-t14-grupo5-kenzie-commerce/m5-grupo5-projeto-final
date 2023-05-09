@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.views import View
+from rest_framework.views import View, Request
 from orders.models import Order
 
 
@@ -17,8 +17,9 @@ class IsSaler(permissions.BasePermission):
 
 # Permissão não está funcionando corretamente
 class IsOrderSaler(permissions.BasePermission):
-    def has_object_permission(self, request, view: View, obj: Order):
+    def has_object_permission(self, request: Request, view: View, obj: Order) -> bool:
         if request.method == "PATCH":
             return obj.saler == request.user
-        else:
-            return True
+        if request.method == "GET":
+            return obj.costumer == request.user or obj.saler == request.user
+        return False

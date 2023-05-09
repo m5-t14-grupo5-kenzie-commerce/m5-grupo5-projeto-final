@@ -8,23 +8,6 @@ class OrderStatus(models.TextChoices):
     DEFAULT = "Pedido realizado"
 
 
-class OrderProduct(models.Model):
-    id = models.UUIDField(
-        default=uuid.uuid4,
-        primary_key=True,
-        editable=False,
-    )
-    order = models.ForeignKey(
-        "orders.Order",
-        on_delete=models.CASCADE,
-    )
-    product = models.ForeignKey(
-        "products.Product",
-        on_delete=models.CASCADE,
-    )
-    amount = models.IntegerField(null=True)
-
-
 class Order(models.Model):
     id = models.UUIDField(
         default=uuid.uuid4,
@@ -47,7 +30,15 @@ class Order(models.Model):
         choices=OrderStatus.choices,
         default=OrderStatus.DEFAULT,
     )
-    product = models.ManyToManyField(
-        "products.Product",
-        through="OrderProduct",
+
+
+class OrderItem(models.Model):
+    id = models.UUIDField(
+        default=uuid.uuid4,
+        primary_key=True,
+        editable=False,
     )
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+    amount = models.PositiveIntegerField()
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
