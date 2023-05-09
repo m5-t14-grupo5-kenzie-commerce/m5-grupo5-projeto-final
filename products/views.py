@@ -1,7 +1,4 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import generics, permissions
+from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
 from .permissions import IsProductOwner, IsSalerOrReadOnly
@@ -29,6 +26,7 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProductRetrieveNameView(generics.RetrieveAPIView):
+    authentication_classes = [JWTAuthentication]
     lookup_url_kwarg = ["name"]
     serializer_class = ProductSerializer
     queryset = Product.objects.all()

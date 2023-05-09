@@ -2,15 +2,15 @@ from rest_framework import generics
 from .serializers import AddressSerializer
 from .models import Address
 from users.models import User
+from .permissions import IsAddressOwner
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
 import ipdb
 
 
 class AddressView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAddressOwner]
 
     serializer_class = AddressSerializer
 
@@ -24,7 +24,7 @@ class AddressView(generics.ListCreateAPIView):
 
 class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAddressOwner]
 
     serializer_class = AddressSerializer
     queryset = Address.objects.all()
