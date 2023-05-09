@@ -10,6 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"error": "Product already exists!"}
             )
+
         return Product.objects.create(**validated_data)
 
     class Meta:
