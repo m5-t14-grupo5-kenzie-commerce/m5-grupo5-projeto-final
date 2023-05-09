@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from carts.models import Cart, CartProduct
 from carts.serializers import CartProductSerializer
+from rest_framework.views import status
 from products.models import Product
 
 
@@ -15,14 +16,15 @@ class CartView(generics.ListCreateAPIView):
     serializer_class = CartProductSerializer
 
     def list(self, request, *args, **kwargs):
-        Cart.objects.filter(id=request.user.cart.id)
-        return super().list(request, *args, **kwargs)
+        queryset = CartProduct.objects.filter(cart=request.user.cart.id)
+        serializer = CartProductSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(cart=self.request.user.cart)
 
 
-class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
+class CartProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
 
     queryset = CartProduct.objects.all()
@@ -35,6 +37,7 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
             CartProduct, cart_id=request.user.cart, product_id=product_id
         )
         cart_product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *arg, **kwargs):
         product_id = kwargs["product_id"]
