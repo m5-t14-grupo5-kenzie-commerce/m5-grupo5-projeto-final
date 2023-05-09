@@ -41,7 +41,6 @@ class OrderSerializer(serializers.ModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        print(validated_data)
         user_cart = validated_data["costumer"].cart
         cart = CartProduct.objects.filter(cart=user_cart)
         if not cart:
@@ -84,7 +83,6 @@ class OrderSerializer(serializers.ModelSerializer):
                     id=product.product_id,
                 )
                 current_product.stock -= product.amount
-                print(current_product.stock)
                 if current_product.stock == 0:
                     current_product.available = False
                 current_product.save()

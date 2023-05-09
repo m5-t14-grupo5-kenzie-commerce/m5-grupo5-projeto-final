@@ -24,8 +24,11 @@ class OrderView(generics.ListCreateAPIView):
             saler=request.user,
             status="Pedido realizado",
         )
-        serializer = OrderSerializer(queryset, many=True)
-        return Response(serializer.data)
+
+        result_page = self.paginate_queryset(queryset)
+        serializer = OrderSerializer(result_page, many=True)
+        paginated_data = self.get_paginated_response(serializer.data)
+        return paginated_data
 
     def perform_create(self, serializer):
         serializer.save(costumer=self.request.user)
@@ -63,8 +66,9 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
-        user = get_object_or_404(User, pk=serializer.data["costumer"])
-        seller = get_object_or_404(User, pk=serializer.data["saler"])
+        user = get_object_or_404(User, pk=serializer.data["costumer"]["id"])
+        seller = get_object_or_404(User, pk=serializer.data["saler"]["id"])
+
         send_mail(
             subject=f"Order {serializer.data['id']} Update",
             message=f"Dear {user.last_name}, We wanted to let you know that the status of your order {serializer.data['id']} has been updated. The new status is {serializer.data['status']}. If you have any questions or concerns about your order, please dont hesitate to contact us. Thank you for choosing us. {seller.email}",
