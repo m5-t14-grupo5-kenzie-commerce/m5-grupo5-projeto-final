@@ -40,7 +40,6 @@ class ProductRetrieveNameView(generics.RetrieveAPIView):
 
 
 class ProductRetrieveCategoryView(generics.RetrieveAPIView):
-    authentication_classes = [JWTAuthentication]
     lookup_url_kwarg = ["category"]
     serializer_class = ProductSerializer
     queryset = Product.objects.all()

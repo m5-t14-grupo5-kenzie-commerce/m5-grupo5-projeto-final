@@ -16,3 +16,4 @@ class IsProductOwner(permissions.BasePermission):
             return obj.saler == request.user
         else:
             return True
+

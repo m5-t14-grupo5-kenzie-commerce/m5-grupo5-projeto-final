@@ -7,7 +7,11 @@ class ProductSerializer(serializers.ModelSerializer):
         name = validated_data["name"]
         saler = validated_data["saler"]
         if Product.objects.filter(name=name, saler=saler).exists():
-            raise serializers.ValidationError({"error": "Product already exists!"})
+
+            raise serializers.ValidationError(
+                {"error": "Product already exists!"}
+            )
+            
         return Product.objects.create(**validated_data)
 
     class Meta:
