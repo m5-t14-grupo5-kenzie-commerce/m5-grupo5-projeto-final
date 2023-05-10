@@ -12,8 +12,10 @@ class IsSalerOrReadOnly(permissions.BasePermission):
 
 class IsProductOwner(permissions.BasePermission):
     def has_object_permission(self, request, view: View, obj: Product) -> bool:
+
         if request.method == "PATCH" or request.method == "DELETE":
             return obj.saler == request.user
         else:
             return True
+
 

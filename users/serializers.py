@@ -70,3 +70,4 @@ class UserSerializer(serializers.ModelSerializer):
                 ]
             },
         }
+        depth = 1
