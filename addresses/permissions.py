@@ -2,7 +2,6 @@ from rest_framework import permissions
 from .models import Address
 from rest_framework.views import View
 from rest_framework.views import Request, View
-import ipdb
 
 
 class IsAddressOwner(permissions.BasePermission):
