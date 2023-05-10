@@ -13,4 +13,3 @@ urlpatterns = [
     path("products/name/<str:name>/", ProductRetrieveNameView.as_view()),
     path("products/category/<str:category>/", ProductRetrieveCategoryView.as_view()),
 ]
-

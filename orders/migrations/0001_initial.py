@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Cart",
+            name="Order",
             fields=[
                 (
                     "id",
@@ -23,10 +23,23 @@ class Migration(migrations.Migration):
                         serialize=False,
                     ),
                 ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Em andamento", "Em Andamento"),
+                            ("Entregue", "Entregue"),
+                            ("Pedido realizado", "Default"),
+                        ],
+                        default="Pedido realizado",
+                        max_length=127,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name="CartProduct",
+            name="OrderProduct",
             fields=[
                 (
                     "id",
@@ -38,11 +51,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("amount", models.IntegerField()),
-                ("id_product", models.CharField(null=True)),
                 (
-                    "cart",
+                    "order",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="carts.cart"
+                        on_delete=django.db.models.deletion.CASCADE, to="orders.order"
                     ),
                 ),
             ],
