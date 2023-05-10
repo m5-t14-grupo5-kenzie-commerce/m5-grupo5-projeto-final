@@ -8,4 +8,8 @@ urlpatterns = [
     path("users/<uuid:pk>/", views.UserDetailView.as_view()),
     path("users/login/", jwt_views.TokenObtainPairView.as_view()),
     path("users/<uuid:pk>/address/", address_views.AddressView.as_view()),
+    path(
+        "users/<uuid:pk>/address/<uuid:pk2>/",
+        address_views.AddressDetailView.as_view(),
+    ),
 ]
