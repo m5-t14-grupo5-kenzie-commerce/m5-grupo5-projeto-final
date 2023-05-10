@@ -5,7 +5,6 @@ from users.models import User
 from .permissions import IsAddressOwner
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
-import ipdb
 
 
 class AddressView(generics.ListCreateAPIView):

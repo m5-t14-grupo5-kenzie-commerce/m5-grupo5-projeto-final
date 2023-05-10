@@ -1,8 +1,5 @@
 from rest_framework import serializers
 from .models import Address
-from users.models import User
-from django.shortcuts import get_object_or_404
-import ipdb
 
 
 class AddressSerializer(serializers.ModelSerializer):
