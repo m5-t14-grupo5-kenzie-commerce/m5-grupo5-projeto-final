@@ -1,10 +1,10 @@
-from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from carts.models import CartProduct
 from orders.serializers import ReturnProductSerializer
 from products.models import Product
 from django.core.validators import MinValueValidator
+from drf_spectacular.utils import extend_schema_field
 
 
 class CartProductSerializer(serializers.ModelSerializer):
@@ -12,12 +12,6 @@ class CartProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict):
         product = get_object_or_404(Product, pk=validated_data["id_product"])
-
-        amount = product.stock
-        # VER SE REALMENTE PRECISA ESSA VERIFICAÇÃO QUANDO FOR ADICIONAR NO CARRINHO
-        # fazer a lógica para usar o campo available da products
-        # if validated_data["amount"] > amount:
-        #     raise ValidationError({"amount": ["Quantity exceeds the stock"]})
 
         cart_product, created = CartProduct.objects.get_or_create(
             cart=validated_data["cart"],
@@ -48,6 +42,7 @@ class CartProductSerializer(serializers.ModelSerializer):
         }
         depth = 1
 
-    def get_product(self, obj):
+    @extend_schema_field(serializers.IntegerField)
+    def get_product(self, obj) -> int:
         product = obj.product
         return ReturnProductSerializer(product).data
