@@ -43,10 +43,13 @@ class UserSerializer(serializers.ModelSerializer):
             "is_admin",
             "is_superuser",
             "cart",
+            "addresses",
         ]
-        read_only_fields = ["id", "cart"]
-        # depth = 1
-
+        read_only_fields = [
+            "id",
+            "cart",
+            "addresses",
+        ]
         extra_kwargs = {
             "password": {"write_only": True},
             "is_superuser": {"read_only": True},
