@@ -29,7 +29,7 @@ class CartProductDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = CartProduct.objects.all()
     serializer_class = CartProductSerializer
-    lookup_url_kwarg = ["product_id", "cart_id"]
+    lookup_url_kwarg = "product_id"
 
     def destroy(self, request, *args, **kwargs):
         product_id = kwargs["product_id"]
